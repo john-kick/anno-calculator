@@ -1,121 +1,151 @@
 // script.js
+let productions, demandData;
+
 document.addEventListener("DOMContentLoaded", async () => {
+  [productions, demandData] = await Promise.all([
+    fetchData("/productions"),
+    fetchData("/demand")
+  ]);
+
+  populateResidents();
+  populateElectricityOptions(productions);
+  displayDemandSelection(demandData);
+
+  document.querySelector("form").onsubmit = handleFormSubmit;
+});
+
+async function fetchData(url) {
+  const response = await fetch(url);
+  return response.json();
+}
+
+function populateResidents() {
   const residentsWrapper = document.querySelector("#residents");
   residentList.forEach((resident) =>
     residentsWrapper.appendChild(createInputField(resident, resident))
   );
+}
 
+function populateElectricityOptions(productions) {
   const electricityWrapper = document.getElementById("electricity");
-  const productions = await (await fetch("/productions")).json();
-  productions.forEach((production) => {
-    if (production.improvedByElectricity) {
+  productions
+    .filter((prod) => prod.improvedByElectricity)
+    .forEach((production) =>
       electricityWrapper.appendChild(
         createCheckbox(toCamelCase(production.name), production.name)
-      );
-    }
-  });
+      )
+    );
+}
 
-  const demandData = await (await fetch("/demand")).json();
-  displayDemandSelection(demandData);
-
-  document.querySelector("form").onsubmit = onFormSubmit;
-});
-
-const onFormSubmit = async (event) => {
+async function handleFormSubmit(event) {
   event.preventDefault();
 
-  const rawResidents = Object.fromEntries(
-    residentList.map((resident) => [
-      resident,
-      document.querySelector(`#${resident}`).value
-    ])
-  );
+  const residentsData = getResidentsData();
+  const usesElectricity = getSelectedElectricityOptions();
+  const demandsToCalculate = getDemandSelection();
 
-  const usesElectricity = Object.fromEntries(
-    productions.map((production) => [
-      production,
-      document.querySelector(`#${production}`).checked
-    ])
-  );
-
-  const demandsToCalculate = {};
-  document.querySelectorAll(".demand-wrapper").forEach((demandsPerResident) => {
-    const [basic, luxury] = demandsPerResident.querySelectorAll(
-      ".needs-checkbox-list"
-    );
-    const basicDemandsToCalculate = {};
-
-    basic.querySelectorAll("div").forEach((row) => {
-      const checkbox = row.querySelector("input");
-      basicDemandsToCalculate[checkbox.name] = checkbox.checked;
-    });
-
-    const luxuryDemandsToCalculate = {};
-    luxury.querySelectorAll("div").forEach((row) => {
-      const checkbox = row.querySelector("input");
-      luxuryDemandsToCalculate[checkbox.name] = checkbox.checked;
-    });
-
-    const residentName = demandsPerResident
-      .querySelector("h4")
-      .innerText.split(" ")[0];
-    demandsToCalculate[residentName] = {
-      basic: basicDemandsToCalculate,
-      luxury: luxuryDemandsToCalculate
-    };
-  });
-
-  console.log(demandsToCalculate);
-
-  const response = await fetch("/calculate", {
+  const result = await fetch("/calculate", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      residents: rawResidents,
+      residents: residentsData,
       usesElectricity,
       demands: demandsToCalculate
     })
-  });
+  }).then((res) => res.json());
 
-  const result = await response.json();
+  displayResults(result);
+}
+
+function getResidentsData() {
+  return Object.fromEntries(
+    residentList.map((resident) => [
+      resident,
+      Number(document.querySelector(`#${resident}`).value)
+    ])
+  );
+}
+
+function getSelectedElectricityOptions() {
+  return Array.from(
+    document.querySelectorAll("#electricity div > input:checked")
+  ).map((input) => input.id);
+}
+
+function getDemandSelection() {
+  const demands = initializeDemands();
+  populateDemands(demands, "#basic-demands", "basic");
+  populateDemands(demands, "#luxury-demands", "luxury");
+  return demands;
+}
+
+function initializeDemands() {
+  return residentList.reduce((acc, resident) => {
+    acc[resident] = { basic: [], luxury: [] };
+    return acc;
+  }, {});
+}
+
+function populateDemands(demands, selector, type) {
+  document.querySelectorAll(`${selector} > td`).forEach((demandBlock) => {
+    const residentType = demandBlock.getAttribute("data-resident");
+    demands[residentType][type] = Array.from(
+      demandBlock.querySelectorAll("input:checked")
+    ).map((input) => input.getAttribute("data-product"));
+  });
+}
+
+function displayResults(result) {
   document.getElementById("results").innerHTML = `<pre>${JSON.stringify(
     result,
     null,
     2
   )}</pre>`;
-};
+}
 
-const createDemandSection = (title, demands) => {
-  const wrapper = document.createElement("td");
-  wrapper.classList.add("needs-checkbox-list");
-
-  const heading = document.createElement("strong");
-  heading.innerText = title;
-  wrapper.append(heading);
-
-  demands.forEach(({ product }) => {
-    wrapper.appendChild(createCheckbox(`${title}-${product}`, product));
-  });
-
-  return wrapper;
-};
-
-const displayDemandSelection = (demandData) => {
+function displayDemandSelection(demandData) {
   const titleRow = document.getElementById("demand-table-title-wrapper");
   const basicRow = document.getElementById("basic-demands");
   const luxuryRow = document.getElementById("luxury-demands");
 
   Object.entries(demandData).forEach(([resident, demand]) => {
-    const residentLabel = document.createElement("td");
-    residentLabel.innerText = `${capitalizeFirstLetter(resident)} demands`;
-    titleRow.append(residentLabel);
-
-    basicRow.append(createDemandSection("Basic demand", demand.basic));
-    luxuryRow.append(createDemandSection("Luxury demand", demand.luxury));
+    titleRow.append(createTableHeader(resident));
+    basicRow.append(createDemandSection("basic", demand.basic, resident));
+    luxuryRow.append(createDemandSection("luxury", demand.luxury, resident));
   });
-};
+}
 
-const createInputField = (id, labelText, value = 0) => {
+function createTableHeader(resident) {
+  const cell = document.createElement("td");
+  cell.innerText = `${capitalizeFirstLetter(resident)} demands`;
+  return cell;
+}
+
+function createDemandSection(type, demands, resident) {
+  const wrapper = document.createElement("td");
+  wrapper.classList.add("needs-checkbox-list");
+  wrapper.setAttribute("data-resident", resident);
+  wrapper.setAttribute("data-type", type);
+
+  const heading = document.createElement("strong");
+  heading.innerText = `${capitalizeFirstLetter(type)} demand`;
+  wrapper.append(heading);
+
+  demands.forEach(({ product }) => {
+    wrapper.appendChild(
+      createCheckbox(
+        `${resident}-${type}-${product}`,
+        replaceUnderscoreWithSpace(product),
+        true,
+        [["product", product]]
+      )
+    );
+  });
+
+  return wrapper;
+}
+
+function createInputField(id, labelText, value = 0) {
   const input = document.createElement("input");
   input.type = "number";
   input.id = id;
@@ -129,31 +159,32 @@ const createInputField = (id, labelText, value = 0) => {
   const wrapper = document.createElement("div");
   wrapper.append(label, input);
   return wrapper;
-};
+}
 
-const createCheckbox = (id, name, checked = true) => {
+function createCheckbox(id, name, checked = true, data = []) {
   const checkbox = document.createElement("input");
   checkbox.type = "checkbox";
   checkbox.id = id;
   checkbox.name = id;
   checkbox.checked = checked;
 
+  data.forEach(([key, value]) => checkbox.setAttribute(`data-${key}`, value));
+
   const label = document.createElement("label");
   label.htmlFor = id;
-  label.innerText = replaceUnderscoreWithSpace(name);
+  label.innerText = name;
 
   const wrapper = document.createElement("div");
   wrapper.append(checkbox, label);
   return wrapper;
-};
+}
 
 const residentList = ["farmer", "worker", "artisan", "engineer", "investor"];
 
 function toCamelCase(sentence) {
   return sentence
-    .toLowerCase() // Lowercase the entire sentence first
-    .replace(/[^a-zA-Z0-9]+(.)/g, (_, char) => char.toUpperCase()) // Capitalize letters after spaces or special characters
-    .replace(/^\w/, (char) => char.toLowerCase()); // Ensure the first letter is lowercase
+    .toLowerCase()
+    .replace(/[^a-zA-Z0-9]+(.)/g, (_, char) => char.toUpperCase());
 }
 
 function capitalizeFirstLetter(val) {
@@ -161,5 +192,5 @@ function capitalizeFirstLetter(val) {
 }
 
 function replaceUnderscoreWithSpace(str) {
-  return str.replace("_", " ");
+  return str.replace(/_/g, " ");
 }
