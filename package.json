@@ -1,0 +1,19 @@
+{
+  "name": "anno-calculator",
+  "module": "src/index.ts",
+  "type": "module",
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/bun": "latest",
+    "tsx": "^4.19.3"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  },
+  "scripts": {
+    "dev": "tsx watch ./src/index.ts"
+  }
+}

@@ -1,0 +1,129 @@
+/* styles.css */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #e0ded4;
+  color: #3a3a3a;
+  margin: 0;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#title {
+  color: #2b3a42;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+#page-content {
+  background-color: #f5f0e6;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  padding: 20px;
+  max-width: 850px;
+  width: 90%;
+}
+
+#selection-area {
+  display: flex;
+  gap: 20px;
+  flex-direction: column;
+}
+
+#selection-area > div {
+  display: flex;
+  gap: 20px;
+}
+
+#residents,
+#electricity-list,
+#demands {
+  background-color: #d6ccc2;
+  border: 1px solid #8e8d8a;
+  border-radius: 8px;
+  padding: 15px;
+  flex: 1;
+  min-width: 250px;
+}
+
+#electricity {
+  max-height: 275px;
+  overflow-y: auto;
+}
+
+h4 {
+  margin-top: 0;
+  color: #5c6b73;
+}
+
+input[type="checkbox"] {
+  margin-right: 5px;
+}
+
+label {
+  cursor: pointer;
+}
+
+.worker-label {
+  display: block;
+  margin-top: 8px;
+}
+
+input[type="number"] {
+  width: 100%;
+  padding: 5px;
+  border: 1px solid #8e8d8a;
+  border-radius: 4px;
+}
+
+button[type="submit"] {
+  background-color: #3b6064;
+  color: #f5f0e6;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  cursor: pointer;
+  margin-top: 20px;
+  width: 100%;
+}
+
+button[type="submit"]:hover {
+  background-color: #7395ae;
+}
+
+#results {
+  margin-top: 20px;
+  background-color: #eef1f1;
+  border: 1px solid #3b6064;
+  border-radius: 8px;
+  padding: 10px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.demand-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.demand-wrapper > h4 {
+  flex-grow: 0;
+}
+
+.demand-wrapper > div {
+  flex-grow: 1;
+}
+
+.needs-checkbox-list {
+  margin-bottom: 10px;
+}
+
+#demands thead td {
+  color: #3b6064;
+  font-weight: 700;
+}
+
+#demands tbody td {
+  vertical-align: top;
+}
