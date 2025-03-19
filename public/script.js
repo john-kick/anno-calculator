@@ -69,7 +69,7 @@ function getResidentsData() {
 function getSelectedElectricityOptions() {
   return Array.from(
     document.querySelectorAll("#electricity div > input:checked")
-  ).map((input) => input.id);
+  ).map((input) => input.name);
 }
 
 function getDemandSelection() {
@@ -165,7 +165,7 @@ function createCheckbox(id, name, checked = true, data = []) {
   const checkbox = document.createElement("input");
   checkbox.type = "checkbox";
   checkbox.id = id;
-  checkbox.name = id;
+  checkbox.name = name;
   checkbox.checked = checked;
 
   data.forEach(([key, value]) => checkbox.setAttribute(`data-${key}`, value));
@@ -179,7 +179,7 @@ function createCheckbox(id, name, checked = true, data = []) {
   return wrapper;
 }
 
-const residentList = ["farmer", "worker", "artisan", "engineer", "investor"];
+const residentList = ["Farmer", "Worker", "Artisan", "Engineer", "Investor"];
 
 function toCamelCase(sentence) {
   return sentence

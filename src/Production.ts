@@ -62,7 +62,6 @@ export const products = [
 
 export type Product = (typeof products)[number];
 
-// Investors are not working, these lazy bastards!
 export type WorkerType =
   | "Farmer"
   | "Worker"
@@ -70,6 +69,9 @@ export type WorkerType =
   | "Engineer"
   | "Jornaleros"
   | "Obreros";
+
+// Investors are not working, these lazy bastards!
+export type ResidentType = WorkerType | "Investor";
 
 export type Production = {
   name: string;
@@ -82,7 +84,7 @@ export type Production = {
   requiresElectricity: boolean;
 };
 
-const Fishery: Production = {
+export const Fishery: Production = {
   name: "Fishery",
   product: "Fish",
   amountPerMinute: 2,
@@ -93,7 +95,7 @@ const Fishery: Production = {
   requiresElectricity: false
 };
 
-const PotatoFarm: Production = {
+export const PotatoFarm: Production = {
   name: "Potato Farm",
   product: "Potato",
   amountPerMinute: 2,
@@ -104,7 +106,7 @@ const PotatoFarm: Production = {
   requiresElectricity: false
 };
 
-const Distillery: Production = {
+export const Distillery: Production = {
   name: "Distillery",
   product: "Schnapps",
   amountPerMinute: 2,
@@ -115,7 +117,7 @@ const Distillery: Production = {
   requiresElectricity: false
 };
 
-const SheepFarm: Production = {
+export const SheepFarm: Production = {
   name: "Sheep Farm",
   product: "Wool",
   amountPerMinute: 2,
@@ -126,7 +128,7 @@ const SheepFarm: Production = {
   requiresElectricity: false
 };
 
-const FrameworkKnitters: Production = {
+export const FrameworkKnitters: Production = {
   name: "Framework Knitters",
   product: "Work_clothes",
   amountPerMinute: 2,
@@ -137,7 +139,7 @@ const FrameworkKnitters: Production = {
   requiresElectricity: false
 };
 
-const PigFarm: Production = {
+export const PigFarm: Production = {
   name: "Pig Farm",
   product: "Pigs",
   amountPerMinute: 1,
@@ -148,7 +150,7 @@ const PigFarm: Production = {
   requiresElectricity: false
 };
 
-const SlaughterHouse: Production = {
+export const SlaughterHouse: Production = {
   name: "Slaughter House",
   product: "Sausages",
   amountPerMinute: 1,
@@ -159,7 +161,7 @@ const SlaughterHouse: Production = {
   requiresElectricity: false
 };
 
-const GrainFarm: Production = {
+export const GrainFarm: Production = {
   name: "Grain Farm",
   product: "Grain",
   amountPerMinute: 1,
@@ -170,7 +172,7 @@ const GrainFarm: Production = {
   requiresElectricity: false
 };
 
-const FlourMill: Production = {
+export const FlourMill: Production = {
   name: "Flour Mill",
   product: "Flour",
   amountPerMinute: 2,
@@ -181,7 +183,7 @@ const FlourMill: Production = {
   requiresElectricity: false
 };
 
-const Bakery: Production = {
+export const Bakery: Production = {
   name: "Bakery",
   product: "Bread",
   amountPerMinute: 1,
@@ -192,7 +194,7 @@ const Bakery: Production = {
   requiresElectricity: false
 };
 
-const RenderingWorks: Production = {
+export const RenderingWorks: Production = {
   name: "Rendering Works",
   product: "Tallow",
   amountPerMinute: 1,
@@ -203,7 +205,7 @@ const RenderingWorks: Production = {
   requiresElectricity: false
 };
 
-const SoapFactory: Production = {
+export const SoapFactory: Production = {
   name: "Soap Factory",
   product: "Soap",
   amountPerMinute: 2,
@@ -214,7 +216,7 @@ const SoapFactory: Production = {
   requiresElectricity: false
 };
 
-const Malthouse: Production = {
+export const Malthouse: Production = {
   name: "Malthouse",
   product: "Malt",
   amountPerMinute: 2,
@@ -225,7 +227,7 @@ const Malthouse: Production = {
   requiresElectricity: false
 };
 
-const HopFarm: Production = {
+export const HopFarm: Production = {
   name: "Hop Farm",
   product: "Hops",
   amountPerMinute: 2 / 3,
@@ -236,7 +238,7 @@ const HopFarm: Production = {
   requiresElectricity: false
 };
 
-const Brewery: Production = {
+export const Brewery: Production = {
   name: "Brewery",
   product: "Beer",
   amountPerMinute: 1,
@@ -247,7 +249,7 @@ const Brewery: Production = {
   requiresElectricity: false
 };
 
-const CattleFarm: Production = {
+export const CattleFarm: Production = {
   name: "Cattle Farm",
   product: "Beef",
   amountPerMinute: 0.5,
@@ -258,7 +260,7 @@ const CattleFarm: Production = {
   requiresElectricity: false
 };
 
-const RedPepperFarm: Production = {
+export const RedPepperFarm: Production = {
   name: "Red Pepper Farm",
   product: "Red_peppers",
   amountPerMinute: 0.5,
@@ -269,7 +271,7 @@ const RedPepperFarm: Production = {
   requiresElectricity: false
 };
 
-const ArtisanKitchen: Production = {
+export const ArtisanKitchen: Production = {
   name: "Artisan Kitchen",
   product: "Goulash",
   amountPerMinute: 0.5,
@@ -280,7 +282,7 @@ const ArtisanKitchen: Production = {
   requiresElectricity: false
 };
 
-const IronMine: Production = {
+export const IronMine: Production = {
   name: "Iron Mine",
   product: "Iron",
   amountPerMinute: 4,
@@ -291,7 +293,7 @@ const IronMine: Production = {
   requiresElectricity: false
 };
 
-const Cannery: Production = {
+export const Cannery: Production = {
   name: "Cannery",
   product: "Canned_food",
   amountPerMinute: 2 / 3,
@@ -302,7 +304,7 @@ const Cannery: Production = {
   requiresElectricity: false
 };
 
-const CoalMine: Production = {
+export const CoalMine: Production = {
   name: "Coal Mine",
   product: "Coal",
   amountPerMinute: 4,
@@ -313,7 +315,7 @@ const CoalMine: Production = {
   requiresElectricity: false
 };
 
-const Furnace: Production = {
+export const Furnace: Production = {
   name: "Furnace",
   product: "Steel",
   amountPerMinute: 2,
@@ -324,7 +326,7 @@ const Furnace: Production = {
   requiresElectricity: false
 };
 
-const OldLumberjacksHut: Production = {
+export const OldLumberjacksHut: Production = {
   name: "Old Lumberjacks Hut",
   product: "Wood",
   amountPerMinute: 4,
@@ -335,7 +337,7 @@ const OldLumberjacksHut: Production = {
   requiresElectricity: false
 };
 
-const NewLumberjacksHut: Production = {
+export const NewLumberjacksHut: Production = {
   name: "New Lumberjacks Hut",
   product: "Wood",
   amountPerMinute: 4,
@@ -346,7 +348,7 @@ const NewLumberjacksHut: Production = {
   requiresElectricity: false
 };
 
-const SewingMachineFactory: Production = {
+export const SewingMachineFactory: Production = {
   name: "Sewing Machine Factory",
   product: "Sewing_machines",
   amountPerMinute: 2,
@@ -357,7 +359,7 @@ const SewingMachineFactory: Production = {
   requiresElectricity: false
 };
 
-const CottonPlantation: Production = {
+export const CottonPlantation: Production = {
   name: "Cotton Plantation",
   product: "Cotton",
   amountPerMinute: 1,
@@ -368,7 +370,7 @@ const CottonPlantation: Production = {
   requiresElectricity: false
 };
 
-const CottonMill: Production = {
+export const CottonMill: Production = {
   name: "Cotton Mill",
   product: "Cotton_fabric",
   amountPerMinute: 2,
@@ -379,7 +381,7 @@ const CottonMill: Production = {
   requiresElectricity: false
 };
 
-const HuntingCabin: Production = {
+export const HuntingCabin: Production = {
   name: "Hunting Cabin",
   product: "Furs",
   amountPerMinute: 1,
@@ -390,7 +392,7 @@ const HuntingCabin: Production = {
   requiresElectricity: false
 };
 
-const FurDealer: Production = {
+export const FurDealer: Production = {
   name: "Fur Dealer",
   product: "Fur_coats",
   amountPerMinute: 2,
@@ -401,7 +403,7 @@ const FurDealer: Production = {
   requiresElectricity: false
 };
 
-const CopperMine: Production = {
+export const CopperMine: Production = {
   name: "Copper Mine",
   product: "Copper",
   amountPerMinute: 2,
@@ -412,7 +414,7 @@ const CopperMine: Production = {
   requiresElectricity: false
 };
 
-const ZincMine: Production = {
+export const ZincMine: Production = {
   name: "Zinc Mine",
   product: "Zinc",
   amountPerMinute: 2,
@@ -423,7 +425,7 @@ const ZincMine: Production = {
   requiresElectricity: false
 };
 
-const SandMine: Production = {
+export const SandMine: Production = {
   name: "Sand Mine",
   product: "Quartz_sand",
   amountPerMinute: 2,
@@ -434,7 +436,7 @@ const SandMine: Production = {
   requiresElectricity: false
 };
 
-const Glassmakers: Production = {
+export const Glassmakers: Production = {
   name: "Glassmakers",
   product: "Glass",
   amountPerMinute: 2,
@@ -445,7 +447,7 @@ const Glassmakers: Production = {
   requiresElectricity: false
 };
 
-const BrassSmeltery: Production = {
+export const BrassSmeltery: Production = {
   name: "Brass Smeltery",
   product: "Brass",
   amountPerMinute: 1,
@@ -456,7 +458,7 @@ const BrassSmeltery: Production = {
   requiresElectricity: false
 };
 
-const SpectacleFactory: Production = {
+export const SpectacleFactory: Production = {
   name: "Spectacle Factory",
   product: "Spectacles",
   amountPerMinute: 2 / 3,
@@ -467,7 +469,7 @@ const SpectacleFactory: Production = {
   requiresElectricity: false
 };
 
-const CaoutchoucPlantation: Production = {
+export const CaoutchoucPlantation: Production = {
   name: "Caoutchouc Plantation",
   product: "Caoutchouc",
   amountPerMinute: 1,
@@ -478,7 +480,7 @@ const CaoutchoucPlantation: Production = {
   requiresElectricity: false
 };
 
-const BicycleFactory: Production = {
+export const BicycleFactory: Production = {
   name: "Bicycle Factory",
   product: "Penny_farthings",
   amountPerMinute: 4,
@@ -489,7 +491,7 @@ const BicycleFactory: Production = {
   requiresElectricity: true
 };
 
-const CoffeePlantation: Production = {
+export const CoffeePlantation: Production = {
   name: "Coffee Plantation",
   product: "Coffee_beans",
   amountPerMinute: 1,
@@ -500,7 +502,7 @@ const CoffeePlantation: Production = {
   requiresElectricity: false
 };
 
-const CoffeeRoaster: Production = {
+export const CoffeeRoaster: Production = {
   name: "Coffee Roaster",
   product: "Coffee",
   amountPerMinute: 2,
@@ -511,7 +513,7 @@ const CoffeeRoaster: Production = {
   requiresElectricity: false
 };
 
-const GoldMine: Production = {
+export const GoldMine: Production = {
   name: "Gold Mine",
   product: "Gold_ore",
   amountPerMinute: 0.4,
@@ -522,7 +524,7 @@ const GoldMine: Production = {
   requiresElectricity: false
 };
 
-const Goldsmiths: Production = {
+export const Goldsmiths: Production = {
   name: "Goldsmiths",
   product: "Gold",
   amountPerMinute: 1,
@@ -533,7 +535,7 @@ const Goldsmiths: Production = {
   requiresElectricity: false
 };
 
-const Clockmakers: Production = {
+export const Clockmakers: Production = {
   name: "Clockmakers",
   product: "Pocket_watches",
   amountPerMinute: 4 / 3,
@@ -544,7 +546,7 @@ const Clockmakers: Production = {
   requiresElectricity: true
 };
 
-const FilamentFactory: Production = {
+export const FilamentFactory: Production = {
   name: "Filament Factory",
   product: "Filaments",
   amountPerMinute: 1,
@@ -555,7 +557,7 @@ const FilamentFactory: Production = {
   requiresElectricity: false
 };
 
-const LightBulbFactory: Production = {
+export const LightBulbFactory: Production = {
   name: "Light Bulb Factory",
   product: "Light_bulbs",
   amountPerMinute: 1,
@@ -566,7 +568,7 @@ const LightBulbFactory: Production = {
   requiresElectricity: false
 };
 
-const Vineyard: Production = {
+export const Vineyard: Production = {
   name: "Vineyard",
   product: "Grapes",
   amountPerMinute: 0.5,
@@ -577,7 +579,7 @@ const Vineyard: Production = {
   requiresElectricity: false
 };
 
-const ChampagneCellar: Production = {
+export const ChampagneCellar: Production = {
   name: "Champagne Cellar",
   product: "Champagne",
   amountPerMinute: 2,
@@ -588,7 +590,7 @@ const ChampagneCellar: Production = {
   requiresElectricity: false
 };
 
-const OldMarquetryWorkshop: Production = {
+export const OldMarquetryWorkshop: Production = {
   name: "Old Marquetry Workshop",
   product: "Wood_veneers",
   amountPerMinute: 1,
@@ -599,7 +601,7 @@ const OldMarquetryWorkshop: Production = {
   requiresElectricity: false
 };
 
-const NewMarquetryWorkshop: Production = {
+export const NewMarquetryWorkshop: Production = {
   name: "New Marquetry Workshop",
   product: "Wood_veneers",
   amountPerMinute: 1,
@@ -610,7 +612,7 @@ const NewMarquetryWorkshop: Production = {
   requiresElectricity: false
 };
 
-const TobaccoPlantation: Production = {
+export const TobaccoPlantation: Production = {
   name: "Tobacco Plantation",
   product: "Tobacco",
   amountPerMinute: 0.5,
@@ -621,7 +623,7 @@ const TobaccoPlantation: Production = {
   requiresElectricity: false
 };
 
-const CigarFactory: Production = {
+export const CigarFactory: Production = {
   name: "Cigar Factory",
   product: "Cigars",
   amountPerMinute: 2,
@@ -632,7 +634,7 @@ const CigarFactory: Production = {
   requiresElectricity: false
 };
 
-const SugarCanePlantation: Production = {
+export const SugarCanePlantation: Production = {
   name: "Sugar Cane Plantation",
   product: "Sugar_cane",
   amountPerMinute: 2,
@@ -643,7 +645,7 @@ const SugarCanePlantation: Production = {
   requiresElectricity: false
 };
 
-const SugarRefinery: Production = {
+export const SugarRefinery: Production = {
   name: "Sugar Refinery",
   product: "Sugar",
   amountPerMinute: 2,
@@ -654,7 +656,7 @@ const SugarRefinery: Production = {
   requiresElectricity: false
 };
 
-const CocoaPlantation: Production = {
+export const CocoaPlantation: Production = {
   name: "Cocoa Plantation",
   product: "Cocoa",
   amountPerMinute: 1,
@@ -665,7 +667,7 @@ const CocoaPlantation: Production = {
   requiresElectricity: false
 };
 
-const ChocolateFactory: Production = {
+export const ChocolateFactory: Production = {
   name: "Chocolate Factory",
   product: "Chocolate",
   amountPerMinute: 2,
@@ -676,7 +678,7 @@ const ChocolateFactory: Production = {
   requiresElectricity: false
 };
 
-const PearlFarm: Production = {
+export const PearlFarm: Production = {
   name: "Pearl Farm",
   product: "Pearls",
   amountPerMinute: 2 / 3,
@@ -687,7 +689,7 @@ const PearlFarm: Production = {
   requiresElectricity: false
 };
 
-const Jewellers: Production = {
+export const Jewellers: Production = {
   name: "Jewellers",
   product: "Jewerelly",
   amountPerMinute: 2,
@@ -698,7 +700,7 @@ const Jewellers: Production = {
   requiresElectricity: false
 };
 
-const GramophoneFactory: Production = {
+export const GramophoneFactory: Production = {
   name: "Gramophone Factory",
   product: "Gramophones",
   amountPerMinute: 1,
@@ -709,7 +711,7 @@ const GramophoneFactory: Production = {
   requiresElectricity: true
 };
 
-const Coachmakers: Production = {
+export const Coachmakers: Production = {
   name: "Coachmakers",
   product: "Chassis",
   amountPerMinute: 0.5,
@@ -720,7 +722,7 @@ const Coachmakers: Production = {
   requiresElectricity: false
 };
 
-const MotorAssemblyLine: Production = {
+export const MotorAssemblyLine: Production = {
   name: "Motor Assembly Line",
   product: "Steam_motors",
   amountPerMinute: 4 / 3,
@@ -731,7 +733,7 @@ const MotorAssemblyLine: Production = {
   requiresElectricity: true
 };
 
-const CabAssemblyLine: Production = {
+export const CabAssemblyLine: Production = {
   name: "Cab Assembly Line",
   product: "Steam_carriages",
   amountPerMinute: 2,
@@ -742,7 +744,7 @@ const CabAssemblyLine: Production = {
   requiresElectricity: true
 };
 
-const RumDistillery: Production = {
+export const RumDistillery: Production = {
   name: "Rum Distillery",
   product: "Rum",
   amountPerMinute: 2,
