@@ -121,11 +121,52 @@ function populateDemands(demands, selector, type) {
 }
 
 function displayResults(result) {
-  document.getElementById("results").innerHTML = `<pre>${JSON.stringify(
-    result,
-    null,
-    2
-  )}</pre>`;
+  const resultsContainer = document.getElementById("results");
+  resultsContainer.innerHTML = ""; // Clear previous results
+
+  resultsContainer.appendChild(createDemandTable(result.demand));
+  resultsContainer.appendChild(
+    createProductionsTable(result.neededProductions)
+  );
+  resultsContainer.appendChild(createWorkersTable(result.neededWorker));
+}
+
+function createDemandTable(demand) {
+  const table = createTable(["Product", "Demand (per min)"]);
+  Object.entries(demand).forEach(([product, amount]) => {
+    table
+      .querySelector("tbody")
+      .appendChild(
+        createRow([replaceUnderscoreWithSpace(product), amount.toFixed(2)])
+      );
+  });
+  return wrapTable("Demand", table);
+}
+
+function createProductionsTable(productions) {
+  const table = createTable(["Production", "Amount", "Electricity"]);
+  productions.forEach(({ production, amount, withElectricity }) => {
+    table
+      .querySelector("tbody")
+      .appendChild(
+        createRow([
+          production.name,
+          amount.toFixed(2),
+          withElectricity ? "Yes" : "No"
+        ])
+      );
+  });
+  return wrapTable("Needed Productions", table);
+}
+
+function createWorkersTable(workers) {
+  const table = createTable(["Worker Type", "Amount"]);
+  Object.entries(workers).forEach(([workerType, amount]) => {
+    table
+      .querySelector("tbody")
+      .appendChild(createRow([workerType, amount.toFixed(2)]));
+  });
+  return wrapTable("Needed Workers", table);
 }
 
 function displayDemandSelection(demandData) {
@@ -255,4 +296,47 @@ function invertDemandCheckboxes(type) {
     .forEach((checkbox) => {
       checkbox.checked = !checkbox.checked;
     });
+}
+
+function createTable(headers) {
+  const table = document.createElement("table");
+  table.classList.add("styled-table"); // Added the new styled class
+
+  const thead = document.createElement("thead");
+  const headerRow = document.createElement("tr");
+  headers.forEach((header) => {
+    const th = document.createElement("th");
+    th.innerText = header;
+    headerRow.appendChild(th);
+  });
+  thead.appendChild(headerRow);
+  table.appendChild(thead);
+
+  const tbody = document.createElement("tbody");
+  table.appendChild(tbody);
+
+  return table;
+}
+
+function createRow(cells) {
+  const row = document.createElement("tr");
+  cells.forEach((cellData) => {
+    const cell = document.createElement("td");
+    cell.innerText = cellData;
+    row.appendChild(cell);
+  });
+  return row;
+}
+
+function wrapTable(title, table) {
+  const container = document.createElement("div");
+  container.classList.add("table-container"); // Added the new container class
+
+  const heading = document.createElement("h3");
+  heading.innerText = title;
+
+  container.appendChild(heading);
+  container.appendChild(table);
+
+  return container;
 }

@@ -12,7 +12,12 @@ import {
   DemandPerInvestor,
   DemandPerWorker
 } from "./Demand";
-import { Productions, products as Products } from "./Production";
+import {
+  Productions,
+  products as Products,
+  type Product,
+  type ResidentType
+} from "./Production";
 
 const __dirname = path.resolve();
 const PORT = 3000;
@@ -23,9 +28,12 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
 
 app.post("/calculate", (req: Request, res: Response) => {
-  const { demands: demandsToCalculate, residents, usesElectricity } = req.body;
+  const demands: Record<ResidentType, { basic: Product[]; luxury: Product[] }> =
+    req.body.demands;
+  const residents: Record<ResidentType, number> = req.body.residents;
+  const usesElectricity: string[] = req.body.usesElectricity;
 
-  const demand = calculateDemand(residents, demandsToCalculate);
+  const demand = calculateDemand(residents, demands);
   const neededProductions = calculateNeededProductions(demand, usesElectricity);
   const neededWorker = calculateNeededWorker(neededProductions);
 

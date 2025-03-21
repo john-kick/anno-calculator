@@ -71,7 +71,7 @@ export function calculateDemand(
  */
 export function calculateNeededProductions(
   demand: Partial<Record<Product, number>>,
-  usesElectricity: any = {}
+  usesElectricity: string[] = []
 ): { production: Production; amount: number }[] {
   let productions: { production: Production; amount: number }[] = [];
 
@@ -86,7 +86,11 @@ export function calculateNeededProductions(
     }
 
     productions = productions.concat(
-      calculateNumberOfProductions(currProduction, demandForProduct)
+      calculateNumberOfProductions(
+        currProduction,
+        demandForProduct,
+        usesElectricity
+      )
     );
   });
 
@@ -95,13 +99,20 @@ export function calculateNeededProductions(
 
 function calculateNumberOfProductions(
   prod: Production,
-  demand: number
-): { production: Production; amount: number }[] {
-  const productions: { production: Production; amount: number }[] = [];
+  demand: number,
+  usesElectricity: string[] = []
+): { production: Production; amount: number; withElectricity: boolean }[] {
+  const productions: {
+    production: Production;
+    amount: number;
+    withElectricity: boolean;
+  }[] = [];
 
   // Berechne den Multiplikator durch Elektrizität, falls vorhanden
-  // const electricityMultiplier = prod.improvedByElectricity ? 2 : 1;
-  const electricityMultiplier = 1;
+  const productionImprovedByElectricity =
+    prod.improvedByElectricity && usesElectricity.includes(prod.name);
+
+  const electricityMultiplier = productionImprovedByElectricity ? 2 : 1;
 
   // Berechne die benötigte Menge der aktuellen Produktionseinheit (prod)
   const productsPerProduction = prod.amountPerMinute * electricityMultiplier;
@@ -112,7 +123,8 @@ function calculateNumberOfProductions(
   // Füge die aktuelle Produktionseinheit und deren benötigte Menge zur Ergebnisliste hinzu
   productions.push({
     production: prod,
-    amount: ownAmount
+    amount: ownAmount,
+    withElectricity: productionImprovedByElectricity || prod.requiresElectricity
   });
 
   // Berechne rekursiv die benötigte Menge der Produktionen, die für diese Produktion erforderlich sind
