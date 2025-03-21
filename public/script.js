@@ -12,6 +12,29 @@ document.addEventListener("DOMContentLoaded", async () => {
   displayDemandSelection(demandData);
 
   document.querySelector("form").onsubmit = handleFormSubmit;
+
+  // Electricity section buttons
+  document.getElementById("select-all-electricity").onclick = () =>
+    toggleElectricityCheckboxes(true);
+  document.getElementById("select-none-electricity").onclick = () =>
+    toggleElectricityCheckboxes(false);
+  document.getElementById("invert-electricity").onclick =
+    invertElectricityCheckboxes;
+
+  // Demand section buttons
+  document.getElementById("select-all-basic").onclick = () =>
+    toggleDemandCheckboxes("basic", true);
+  document.getElementById("select-none-basic").onclick = () =>
+    toggleDemandCheckboxes("basic", false);
+  document.getElementById("invert-basic").onclick = () =>
+    invertDemandCheckboxes("basic");
+
+  document.getElementById("select-all-luxury").onclick = () =>
+    toggleDemandCheckboxes("luxury", true);
+  document.getElementById("select-none-luxury").onclick = () =>
+    toggleDemandCheckboxes("luxury", false);
+  document.getElementById("invert-luxury").onclick = () =>
+    invertDemandCheckboxes("luxury");
 });
 
 async function fetchData(url) {
@@ -87,12 +110,14 @@ function initializeDemands() {
 }
 
 function populateDemands(demands, selector, type) {
-  document.querySelectorAll(`${selector} > td`).forEach((demandBlock) => {
-    const residentType = demandBlock.getAttribute("data-resident");
-    demands[residentType][type] = Array.from(
-      demandBlock.querySelectorAll("input:checked")
-    ).map((input) => input.getAttribute("data-product"));
-  });
+  document
+    .querySelectorAll(`${selector} > td.demand-block`)
+    .forEach((demandBlock) => {
+      const residentType = demandBlock.getAttribute("data-resident");
+      demands[residentType][type] = Array.from(
+        demandBlock.querySelectorAll("input:checked")
+      ).map((input) => input.getAttribute("data-product"));
+    });
 }
 
 function displayResults(result) {
@@ -126,6 +151,7 @@ function createDemandSection(type, demands, resident) {
   wrapper.classList.add("needs-checkbox-list");
   wrapper.setAttribute("data-resident", resident);
   wrapper.setAttribute("data-type", type);
+  wrapper.classList.add("demand-block");
 
   const heading = document.createElement("strong");
   heading.innerText = `${capitalizeFirstLetter(type)} demand`;
@@ -193,4 +219,40 @@ function capitalizeFirstLetter(val) {
 
 function replaceUnderscoreWithSpace(str) {
   return str.replace(/_/g, " ");
+}
+
+// Toggle all electricity checkboxes
+function toggleElectricityCheckboxes(selectAll) {
+  document
+    .querySelectorAll("#electricity input[type='checkbox']")
+    .forEach((checkbox) => {
+      checkbox.checked = selectAll;
+    });
+}
+
+// Invert electricity checkbox selections
+function invertElectricityCheckboxes() {
+  document
+    .querySelectorAll("#electricity input[type='checkbox']")
+    .forEach((checkbox) => {
+      checkbox.checked = !checkbox.checked;
+    });
+}
+
+// Toggle all demand checkboxes for a type (basic/luxury)
+function toggleDemandCheckboxes(type, selectAll) {
+  document
+    .querySelectorAll(`#${type}-demands input[type='checkbox']`)
+    .forEach((checkbox) => {
+      checkbox.checked = selectAll;
+    });
+}
+
+// Invert demand checkbox selections for a type (basic/luxury)
+function invertDemandCheckboxes(type) {
+  document
+    .querySelectorAll(`#${type}-demands input[type='checkbox']`)
+    .forEach((checkbox) => {
+      checkbox.checked = !checkbox.checked;
+    });
 }

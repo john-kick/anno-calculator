@@ -14,16 +14,51 @@
           <div id="residents"></div>
           <div id="electricity-list">
             <h4>Which productions use electricity?</h4>
+            <div id="electricity-buttons">
+              <button type="button" id="select-all-electricity">
+                Select All
+              </button>
+              <button type="button" id="select-none-electricity">
+                Select None
+              </button>
+              <button type="button" id="invert-electricity">Invert</button>
+            </div>
             <div id="electricity"></div>
           </div>
         </div>
         <table id="demands">
           <thead>
-            <tr id="demand-table-title-wrapper"></tr>
+            <tr id="demand-table-title-wrapper">
+              <td></td>
+            </tr>
           </thead>
           <tbody>
-            <tr id="basic-demands"></tr>
-            <tr id="luxury-demands"></tr>
+            <tr id="basic-demands">
+              <td>
+                <div id="electricity-buttons">
+                  <button type="button" id="select-all-basic">
+                    Select All
+                  </button>
+                  <button type="button" id="select-none-basic">
+                    Select None
+                  </button>
+                  <button type="button" id="invert-basic">Invert</button>
+                </div>
+              </td>
+            </tr>
+            <tr id="luxury-demands">
+              <td>
+                <div id="electricity-buttons">
+                  <button type="button" id="select-all-luxury">
+                    Select All
+                  </button>
+                  <button type="button" id="select-none-luxury">
+                    Select None
+                  </button>
+                  <button type="button" id="invert-luxury">Invert</button>
+                </div>
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>

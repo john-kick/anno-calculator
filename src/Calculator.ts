@@ -10,8 +10,10 @@ import {
   Productions,
   type Product,
   type Production,
-  type ResidentType
+  type ResidentType,
+  type WorkerType
 } from "./Production";
+import { roundTo } from "./util";
 
 export type Residents = Record<ResidentType, number>;
 
@@ -49,9 +51,11 @@ export function calculateDemand(
 
         demands[demandType].forEach((demand) => {
           if (residentDemands.includes(demand.product)) {
-            overallDemand[demand.product] =
+            overallDemand[demand.product] = roundTo(
               (overallDemand[demand.product] || 0) +
-              demand.amount * residentCount;
+                demand.amount * residentCount,
+              3
+            );
           }
         });
       });
@@ -69,22 +73,19 @@ export function calculateNeededProductions(
   demand: Partial<Record<Product, number>>,
   usesElectricity: any = {}
 ): { production: Production; amount: number }[] {
-  const productions: { production: Production; amount: number }[] = [];
+  let productions: { production: Production; amount: number }[] = [];
 
   Object.entries(demand).forEach(([product, demandForProduct]) => {
     // Find the corresponding production
     const currProduction = Productions.find((prod) => {
-      return (
-        prod.product === product &&
-        !(prod.workerType === "Jornaleros" || prod.workerType === "Obreros")
-      );
+      return prod.product === product;
     });
 
     if (!currProduction) {
       throw new Error(`No production found for product ${product}`);
     }
 
-    productions.concat(
+    productions = productions.concat(
       calculateNumberOfProductions(currProduction, demandForProduct)
     );
   });
@@ -126,6 +127,25 @@ function calculateNumberOfProductions(
   return productions;
 }
 
-export function calculateNeededWorker(neededProductions: any) {
-  return {};
+export function calculateNeededWorker(
+  neededProductions: { production: Production; amount: number }[]
+): Partial<Record<WorkerType, number>> {
+  const neededWorkers: Record<WorkerType, number> = {
+    Farmer: 0,
+    Worker: 0,
+    Artisan: 0,
+    Engineer: 0,
+    Jornaleros: 0,
+    Obreros: 0
+  };
+
+  // Sum the worker amounts needed for each production
+  neededProductions.forEach(({ production, amount }) => {
+    neededWorkers[production.workerType] += production.workerAmount * amount;
+  });
+
+  // Remove worker types with an amount of 0
+  return Object.fromEntries(
+    Object.entries(neededWorkers).filter(([_, amount]) => amount > 0)
+  );
 }
