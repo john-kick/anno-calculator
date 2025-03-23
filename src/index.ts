@@ -19,9 +19,10 @@ import {
   type ResidentType
 } from "./Production";
 
-const __dirname = path.resolve();
-const PORT = 3000;
+import { config } from "dotenv";
+config();
 
+const __dirname = path.resolve();
 const app = express();
 
 app.use(express.static(path.join(__dirname, "public")));
@@ -58,6 +59,7 @@ app.get("/products", (req, res) => {
   res.status(200).json(Products);
 });
 
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Server listening at Port ${PORT}`);
 });
