@@ -51,11 +51,17 @@ export function calculateDemand(
 
         demands[demandType].forEach((demand) => {
           if (residentDemands.includes(demand.product)) {
-            overallDemand[demand.product] = roundTo(
+            const newAmount = roundTo(
               (overallDemand[demand.product] || 0) +
                 demand.amount * residentCount,
               3
             );
+
+            if (newAmount > 0) {
+              overallDemand[demand.product] = newAmount;
+            } else {
+              delete overallDemand[demand.product];
+            }
           }
         });
       });
@@ -160,4 +166,20 @@ export function calculateNeededWorker(
   return Object.fromEntries(
     Object.entries(neededWorkers).filter(([_, amount]) => amount > 0)
   );
+}
+
+export function calculateAdditionalProductions(
+  products: Partial<Record<Product, number>>
+): {
+  production: Production;
+  amount: number;
+  withElectricity: boolean;
+}[] {
+  const additionalProductions: {
+    production: Production;
+    amount: number;
+    withElectricity: boolean;
+  }[] = [];
+
+  return additionalProductions;
 }

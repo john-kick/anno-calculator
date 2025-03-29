@@ -33,13 +33,32 @@ app.post("/calculate", (req: Request, res: Response) => {
     req.body.demands;
   const residents: Record<ResidentType, number> = req.body.residents;
   const usesElectricity: string[] = req.body.usesElectricity;
+  const additionalProducts: Partial<Record<Product, number>> =
+    req.body.additionalProducts;
 
   const demand = calculateDemand(residents, demands);
-  const neededProductions = calculateNeededProductions(demand, usesElectricity);
+  const overallDemand = mergeDemands(demand, additionalProducts);
+  const neededProductions = calculateNeededProductions(
+    overallDemand,
+    usesElectricity
+  );
   const neededWorker = calculateNeededWorker(neededProductions);
 
   res.status(200).json({ demand, neededProductions, neededWorker });
 });
+
+function mergeDemands(
+  demand1: Partial<Record<Product, number>>,
+  demand2: Partial<Record<Product, number>>
+): Partial<Record<Product, number>> {
+  const result: Partial<Record<Product, number>> = { ...demand1 };
+
+  for (const [product, quantity] of Object.entries(demand2)) {
+    result[product as Product] = (result[product as Product] || 0) + quantity;
+  }
+
+  return result;
+}
 
 app.get("/demand", (req, res) => {
   res.status(200).json({
@@ -59,7 +78,7 @@ app.get("/products", (req, res) => {
   res.status(200).json(Products);
 });
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT ?? 8080;
 app.listen(PORT, () => {
   console.log(`Server listening at Port ${PORT}`);
 });

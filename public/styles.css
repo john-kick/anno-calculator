@@ -31,14 +31,10 @@ body {
   flex-direction: column;
 }
 
-#selection-area > div {
-  display: flex;
-  gap: 20px;
-}
-
 #residents,
 #electricity-list,
-#demands {
+#demands,
+#other-products {
   background-color: #d6ccc2;
   border: 1px solid #8e8d8a;
   border-radius: 8px;
@@ -50,6 +46,17 @@ body {
 #electricity {
   max-height: 275px;
   overflow-y: auto;
+}
+
+#other-products > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+
+  & > div {
+    flex: 1 1 calc(33% - 0.5rem); /* Ensures a dynamic number of columns */
+    min-width: 200px; /* Prevents elements from shrinking too small */
+  }
 }
 
 h4 {
@@ -70,12 +77,12 @@ label {
   margin-top: 8px;
 }
 
-input[type="number"] {
+/* input[type="number"] {
   width: 100%;
   padding: 5px;
   border: 1px solid #8e8d8a;
   border-radius: 4px;
-}
+} */
 
 button[type="submit"] {
   background-color: #3b6064;
@@ -205,4 +212,27 @@ button[type="submit"]:hover {
 .styled-table tbody tr:hover {
   background-color: #d6ccc2;
   transition: background-color 0.3s ease;
+}
+
+.number-input {
+  display: flex;
+  align-items: stretch; /* Ensures labels and inputs have the same height */
+  min-width: 200px; /* Adjust this value based on your design */
+
+  & > label {
+    background-color: burlywood;
+    flex: 1; /* Makes the label size flexible */
+    padding: 0.5rem;
+    border-radius: 0.25rem 0 0 0.25rem;
+    text-align: center;
+  }
+
+  & > input {
+    flex: 0.5; /* Allows the input to scale dynamically */
+    border: none;
+    border-radius: 0 0.25rem 0.25rem 0;
+    text-align: right;
+    font-size: large;
+    width: 100%; /* Ensures the input fills its space */
+  }
 }

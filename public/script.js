@@ -2,14 +2,16 @@
 let productions, demandData;
 
 document.addEventListener("DOMContentLoaded", async () => {
-  [productions, demandData] = await Promise.all([
+  [productions, demandData, products] = await Promise.all([
     fetchData("/productions"),
-    fetchData("/demand")
+    fetchData("/demand"),
+    fetchData("/products")
   ]);
 
   populateResidents();
   populateElectricityOptions(productions);
   displayDemandSelection(demandData);
+  populateAdditionalProducts();
 
   document.querySelector("form").onsubmit = handleFormSubmit;
 
@@ -66,6 +68,7 @@ async function handleFormSubmit(event) {
   const residentsData = getResidentsData();
   const usesElectricity = getSelectedElectricityOptions();
   const demandsToCalculate = getDemandSelection();
+  const additionalProducts = gatherAdditionalProducts();
 
   const result = await fetch("/calculate", {
     method: "POST",
@@ -73,7 +76,8 @@ async function handleFormSubmit(event) {
     body: JSON.stringify({
       residents: residentsData,
       usesElectricity,
-      demands: demandsToCalculate
+      demands: demandsToCalculate,
+      additionalProducts
     })
   }).then((res) => res.json());
 
@@ -120,6 +124,44 @@ function populateDemands(demands, selector, type) {
     });
 }
 
+function populateAdditionalProducts() {
+  const addProdWrapper = document.querySelector("#other-products > div");
+  products.forEach((product) => {
+    const wrapper = document.createElement("div");
+    wrapper.classList.add("number-input");
+
+    const label = document.createElement("label");
+    const input = document.createElement("input");
+
+    label.innerText = replaceUnderscoreWithSpace(product);
+    label.for = product;
+
+    input.id = product;
+    input.name = product;
+    input.value = 0;
+    input.type = "number";
+
+    wrapper.append(label, input);
+    addProdWrapper.append(wrapper);
+  });
+}
+
+function gatherAdditionalProducts() {
+  const addProducts = {};
+
+  const addProductsElements = document.querySelectorAll(
+    "#other-products > div input"
+  );
+  addProductsElements.forEach((elem) => {
+    const val = Number(elem.value);
+    if (val > 0) {
+      addProducts[elem.name] = Number(val);
+    }
+  });
+
+  return addProducts;
+}
+
 function displayResults(result) {
   const resultsContainer = document.getElementById("results");
   resultsContainer.innerHTML = ""; // Clear previous results
@@ -140,7 +182,7 @@ function createDemandTable(demand) {
         createRow([replaceUnderscoreWithSpace(product), amount.toFixed(2)])
       );
   });
-  return wrapTable("Demand", table);
+  return wrapTable("Resident demands", table);
 }
 
 function createProductionsTable(productions) {
