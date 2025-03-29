@@ -5,10 +5,12 @@ export type Demand = {
   amount: number;
 };
 
-export const DemandPerFarmer: {
+type CategorizedDemand = {
   basic: Demand[];
   luxury: Demand[];
-} = {
+};
+
+export const DemandPerFarmer: CategorizedDemand = {
   basic: [
     {
       product: "Fish",
@@ -27,10 +29,7 @@ export const DemandPerFarmer: {
   ]
 };
 
-export const DemandPerWorker: {
-  basic: Demand[];
-  luxury: Demand[];
-} = {
+export const DemandPerWorker: CategorizedDemand = {
   basic: [
     {
       product: "Fish",
@@ -65,10 +64,7 @@ export const DemandPerWorker: {
   ]
 };
 
-export const DemandPerArtisan: {
-  basic: Demand[];
-  luxury: Demand[];
-} = {
+export const DemandPerArtisan: CategorizedDemand = {
   basic: [
     {
       product: "Sausages",
@@ -107,10 +103,7 @@ export const DemandPerArtisan: {
   ]
 };
 
-export const DemandPerEngineer: {
-  basic: Demand[];
-  luxury: Demand[];
-} = {
+export const DemandPerEngineer: CategorizedDemand = {
   basic: [
     {
       product: "Canned_food",
@@ -153,10 +146,7 @@ export const DemandPerEngineer: {
   ]
 };
 
-export const DemandPerInvestor: {
-  basic: Demand[];
-  luxury: Demand[];
-} = {
+export const DemandPerInvestor: CategorizedDemand = {
   basic: [
     {
       product: "Spectacles",

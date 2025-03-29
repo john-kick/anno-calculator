@@ -17,6 +17,14 @@ import { roundTo } from "./util";
 
 export type Residents = Record<ResidentType, number>;
 
+export type ProductionAmountList = {
+  production: Production;
+  amount: number;
+  withElectricity: boolean;
+}[];
+
+export type ProductAmounts = Partial<Record<Product, number>>;
+
 const demandMapping: Record<
   ResidentType,
   { basic: Demand[]; luxury: Demand[] }
@@ -40,7 +48,7 @@ export function calculateDemand(
   demandsToCalculate: Partial<
     Record<ResidentType, Record<"basic" | "luxury", Product[]>>
   >
-): Partial<Record<Product, number>> {
+): ProductAmounts {
   return Object.entries(residents).reduce(
     (overallDemand, [residentType, residentCount]) => {
       const demands = demandMapping[residentType as ResidentType];
@@ -68,7 +76,7 @@ export function calculateDemand(
 
       return overallDemand;
     },
-    {} as Partial<Record<Product, number>>
+    {} as ProductAmounts
   );
 }
 
@@ -76,10 +84,10 @@ export function calculateDemand(
  * Calculates the needed amount of each production for the given demand.
  */
 export function calculateNeededProductions(
-  demand: Partial<Record<Product, number>>,
+  demand: ProductAmounts,
   usesElectricity: string[] = []
-): { production: Production; amount: number }[] {
-  let productions: { production: Production; amount: number }[] = [];
+): ProductionAmountList {
+  let productionsForDemand: ProductionAmountList = [];
 
   Object.entries(demand).forEach(([product, demandForProduct]) => {
     // Find the corresponding production
@@ -91,28 +99,46 @@ export function calculateNeededProductions(
       throw new Error(`No production found for product ${product}`);
     }
 
-    productions = productions.concat(
-      calculateNumberOfProductions(
-        currProduction,
-        demandForProduct,
-        usesElectricity
-      )
+    const numOfProductions = calculateNumberOfProductions(
+      currProduction,
+      demandForProduct,
+      usesElectricity
+    );
+
+    productionsForDemand = combineProductions(
+      productionsForDemand,
+      numOfProductions
     );
   });
 
-  return productions;
+  return productionsForDemand;
+}
+
+function combineProductions(
+  prods1: ProductionAmountList,
+  prods2: ProductionAmountList
+): ProductionAmountList {
+  prods2.forEach(({ production, amount, withElectricity }) => {
+    const existingEntry = prods1.find(({ production: prod }) => {
+      return production.name === prod.name;
+    });
+
+    if (existingEntry) {
+      existingEntry.amount += amount;
+    } else {
+      prods1.push({ production, amount, withElectricity });
+    }
+  });
+
+  return prods1;
 }
 
 function calculateNumberOfProductions(
   prod: Production,
   demand: number,
   usesElectricity: string[] = []
-): { production: Production; amount: number; withElectricity: boolean }[] {
-  const productions: {
-    production: Production;
-    amount: number;
-    withElectricity: boolean;
-  }[] = [];
+): ProductionAmountList {
+  const productions: ProductionAmountList = [];
 
   // Berechne den Multiplikator durch Elektrizität, falls vorhanden
   const productionImprovedByElectricity =
@@ -146,7 +172,7 @@ function calculateNumberOfProductions(
 }
 
 export function calculateNeededWorker(
-  neededProductions: { production: Production; amount: number }[]
+  neededProductions: ProductionAmountList
 ): Partial<Record<WorkerType, number>> {
   const neededWorkers: Record<WorkerType, number> = {
     Farmer: 0,
@@ -166,20 +192,4 @@ export function calculateNeededWorker(
   return Object.fromEntries(
     Object.entries(neededWorkers).filter(([_, amount]) => amount > 0)
   );
-}
-
-export function calculateAdditionalProductions(
-  products: Partial<Record<Product, number>>
-): {
-  production: Production;
-  amount: number;
-  withElectricity: boolean;
-}[] {
-  const additionalProductions: {
-    production: Production;
-    amount: number;
-    withElectricity: boolean;
-  }[] = [];
-
-  return additionalProductions;
 }

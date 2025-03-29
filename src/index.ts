@@ -3,7 +3,8 @@ import path from "node:path";
 import {
   calculateDemand,
   calculateNeededProductions,
-  calculateNeededWorker
+  calculateNeededWorker,
+  type ProductAmounts
 } from "./Calculator";
 import {
   DemandPerArtisan,
@@ -33,8 +34,7 @@ app.post("/calculate", (req: Request, res: Response) => {
     req.body.demands;
   const residents: Record<ResidentType, number> = req.body.residents;
   const usesElectricity: string[] = req.body.usesElectricity;
-  const additionalProducts: Partial<Record<Product, number>> =
-    req.body.additionalProducts;
+  const additionalProducts: ProductAmounts = req.body.additionalProducts;
 
   const demand = calculateDemand(residents, demands);
   const overallDemand = mergeDemands(demand, additionalProducts);
@@ -48,10 +48,10 @@ app.post("/calculate", (req: Request, res: Response) => {
 });
 
 function mergeDemands(
-  demand1: Partial<Record<Product, number>>,
-  demand2: Partial<Record<Product, number>>
-): Partial<Record<Product, number>> {
-  const result: Partial<Record<Product, number>> = { ...demand1 };
+  demand1: ProductAmounts,
+  demand2: ProductAmounts
+): ProductAmounts {
+  const result: ProductAmounts = { ...demand1 };
 
   for (const [product, quantity] of Object.entries(demand2)) {
     result[product as Product] = (result[product as Product] || 0) + quantity;

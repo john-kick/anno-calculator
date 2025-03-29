@@ -1,5 +1,7 @@
 import { expect } from "chai"; // Import Chai's assertion library
 import {
+  ProductAmounts,
+  ProductionAmountList,
   calculateDemand,
   calculateNeededProductions,
   calculateNeededWorker
@@ -98,7 +100,7 @@ describe("calculateDemand", () => {
 });
 
 describe("calculateNeededProductions", () => {
-  const simpleDemand: Partial<Record<Product, number>> = { Wood: 20 };
+  const simpleDemand: ProductAmounts = { Wood: 20 };
 
   it("simple production chain", () => {
     const productions = calculateNeededProductions(simpleDemand);
@@ -106,23 +108,22 @@ describe("calculateNeededProductions", () => {
     expect(1).to.equal(1); // Basic example test, adjust as needed
   });
 
-  const complexDemand: Partial<Record<Product, number>> = {
+  const complexDemand: ProductAmounts = {
     Steam_carriages: 4
   };
-  const expectedCalculatedDemand: { production: Production; amount: number }[] =
-    [
-      { production: CabAssemblyLine, amount: 2 },
-      { production: MotorAssemblyLine, amount: 3 },
-      { production: Coachmakers, amount: 8 },
-      { production: Furnace, amount: 2 },
-      { production: BrassSmeltery, amount: 4 },
-      { production: OldLumberjacksHut, amount: 1 },
-      { production: CaoutchoucPlantation, amount: 4 },
-      { production: IronMine, amount: 1 },
-      { production: CoalMine, amount: 1 },
-      { production: CopperMine, amount: 2 },
-      { production: ZincMine, amount: 2 }
-    ];
+  const expectedCalculatedDemand: ProductionAmountList = [
+    { production: CabAssemblyLine, amount: 2, withElectricity: false },
+    { production: MotorAssemblyLine, amount: 3, withElectricity: false },
+    { production: Coachmakers, amount: 8, withElectricity: false },
+    { production: Furnace, amount: 2, withElectricity: false },
+    { production: BrassSmeltery, amount: 4, withElectricity: false },
+    { production: OldLumberjacksHut, amount: 1, withElectricity: false },
+    { production: CaoutchoucPlantation, amount: 4, withElectricity: false },
+    { production: IronMine, amount: 1, withElectricity: false },
+    { production: CoalMine, amount: 1, withElectricity: false },
+    { production: CopperMine, amount: 2, withElectricity: false },
+    { production: ZincMine, amount: 2, withElectricity: false }
+  ];
 
   it("complex production chain", () => {
     const neededProductions = calculateNeededProductions(complexDemand);
@@ -152,7 +153,7 @@ describe("calculateNeededProductions", () => {
 
   describe("calculateNeededProductions with production limits", () => {
     it("handles exceeding building capacity", () => {
-      const demand: Partial<Record<Product, number>> = {
+      const demand: ProductAmounts = {
         Coal: 1000
       };
 
@@ -164,7 +165,7 @@ describe("calculateNeededProductions", () => {
   });
 
   describe("calculateNeededProductions for luxury goods", () => {
-    const luxuryDemand: Partial<Record<Product, number>> = {
+    const luxuryDemand: ProductAmounts = {
       Chocolate: 5
     };
 
@@ -180,8 +181,8 @@ describe("calculateNeededProductions", () => {
 });
 
 describe("calculateNeededWorker", () => {
-  const mockNeededProductions: { production: Production; amount: number }[] = [
-    { production: OldLumberjacksHut, amount: 1 }
+  const mockNeededProductions: ProductionAmountList = [
+    { production: OldLumberjacksHut, amount: 1, withElectricity: false }
   ];
 
   const expectedWorkers: Record<WorkerType, number> = {
@@ -199,9 +200,9 @@ describe("calculateNeededWorker", () => {
   });
 
   it("calculates correct worker count", () => {
-    const mockProductions = [
-      { production: Productions[0], amount: 3 },
-      { production: Productions[1], amount: 2 }
+    const mockProductions: ProductionAmountList = [
+      { production: Productions[0], amount: 3, withElectricity: false },
+      { production: Productions[1], amount: 2, withElectricity: false }
     ];
 
     const workers = calculateNeededWorker(mockProductions);
@@ -209,12 +210,11 @@ describe("calculateNeededWorker", () => {
   });
 
   describe("calculateNeededWorker for multiple productions", () => {
-    const mockNeededProductions: { production: Production; amount: number }[] =
-      [
-        { production: OldLumberjacksHut, amount: 1 },
-        { production: Furnace, amount: 2 },
-        { production: CoalMine, amount: 3 }
-      ];
+    const mockNeededProductions: ProductionAmountList = [
+      { production: OldLumberjacksHut, amount: 1, withElectricity: false },
+      { production: Furnace, amount: 2, withElectricity: false },
+      { production: CoalMine, amount: 3, withElectricity: false }
+    ];
 
     it("distributes workers across multiple productions", () => {
       const workers = calculateNeededWorker(mockNeededProductions);
@@ -226,9 +226,9 @@ describe("calculateNeededWorker", () => {
 
   describe("calculateNeededWorker with dynamic worker demand", () => {
     it("updates worker count when production demand changes", () => {
-      const mockProductions = [
-        { production: OldLumberjacksHut, amount: 3 },
-        { production: Furnace, amount: 5 }
+      const mockProductions: ProductionAmountList = [
+        { production: OldLumberjacksHut, amount: 3, withElectricity: false },
+        { production: Furnace, amount: 5, withElectricity: false }
       ];
 
       const workers = calculateNeededWorker(mockProductions);
