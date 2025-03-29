@@ -57,9 +57,20 @@ export const products = [
   "Gramophones",
   "Steam_motors",
   "Chassis",
-  "Steam_carriages"
+  "Steam_carriages",
+  "Timber",
+  "Clay",
+  "Brick",
+  "Sails",
+  "Steel_Beams",
+  "Weapons",
+  "Windows",
+  "Cement",
+  "Reinforced_Concrete",
+  "Saltpetre",
+  "Dynamite",
+  "Advanced Weapons"
 ] as const; // <- This ensures it's treated as a readonly tuple
-
 export type Product = (typeof products)[number];
 
 export type WorkerType =
@@ -755,6 +766,138 @@ export const RumDistillery: Production = {
   requiresElectricity: false
 };
 
+export const OldSawmill: Production = {
+  name: "Old Sawmill",
+  product: "Timber",
+  amountPerMinute: 4,
+  workerType: "Farmer",
+  workerAmount: 10,
+  requires: [OldLumberjacksHut],
+  improvedByElectricity: true,
+  requiresElectricity: false
+};
+
+export const ClayPit: Production = {
+  name: "Clay Pit",
+  product: "Clay",
+  amountPerMinute: 2,
+  workerType: "Worker",
+  workerAmount: 50,
+  requires: [],
+  improvedByElectricity: true,
+  requiresElectricity: false
+};
+
+export const BrickFactory: Production = {
+  name: "Brick Factory",
+  product: "Brick",
+  amountPerMinute: 1,
+  workerType: "Worker",
+  workerAmount: 25,
+  requires: [ClayPit],
+  improvedByElectricity: true,
+  requiresElectricity: false
+};
+
+export const Sailmakers: Production = {
+  name: "Sailmakers",
+  product: "Sails",
+  amountPerMinute: 2,
+  workerType: "Worker",
+  workerAmount: 50,
+  requires: [SheepFarm],
+  improvedByElectricity: true,
+  requiresElectricity: false
+};
+
+export const Steelworks: Production = {
+  name: "Steelworks",
+  product: "Steel_Beams",
+  amountPerMinute: 4 / 3,
+  workerType: "Worker",
+  workerAmount: 200,
+  requires: [Furnace],
+  improvedByElectricity: true,
+  requiresElectricity: false
+};
+
+export const WeaponFactory: Production = {
+  name: "Weapon Factory",
+  product: "Weapons",
+  amountPerMinute: 2 / 3,
+  workerType: "Worker",
+  workerAmount: 50,
+  requires: [Furnace],
+  improvedByElectricity: true,
+  requiresElectricity: false
+};
+
+export const WindowMakers: Production = {
+  name: "Window Makers",
+  product: "Windows",
+  amountPerMinute: 1,
+  workerType: "Artisan",
+  workerAmount: 100,
+  requires: [OldLumberjacksHut, Glassmakers],
+  improvedByElectricity: true,
+  requiresElectricity: false
+};
+
+export const LimestoneQuarry: Production = {
+  name: "Limestone Quarry",
+  product: "Cement",
+  amountPerMinute: 2,
+  workerType: "Worker",
+  workerAmount: 25,
+  requires: [],
+  improvedByElectricity: true,
+  requiresElectricity: false
+};
+
+export const ConcreteFactory: Production = {
+  name: "Concrete Factory",
+  product: "Reinforced_Concrete",
+  amountPerMinute: 1,
+  workerType: "Engineer",
+  workerAmount: 75,
+  requires: [LimestoneQuarry, Furnace],
+  improvedByElectricity: true,
+  requiresElectricity: false
+};
+
+export const SaltpetreWorks: Production = {
+  name: "Saltpetre Works",
+  product: "Saltpetre",
+  amountPerMinute: 0.5,
+  workerType: "Worker",
+  workerAmount: 25,
+  requires: [],
+  improvedByElectricity: true,
+  requiresElectricity: false
+};
+
+export const DynamiteFactory: Production = {
+  name: "Dynamite Factory",
+  product: "Dynamite",
+  amountPerMinute: 1,
+  workerType: "Engineer",
+  workerAmount: 250,
+  requires: [SaltpetreWorks, RenderingWorks],
+  improvedByElectricity: true,
+  requiresElectricity: false
+};
+
+export const HeavyWeaponsFactory: Production = {
+  name: "Heavy Weapons Factory",
+  product: "Advanced Weapons",
+  amountPerMinute: 1,
+  workerType: "Engineer",
+  workerAmount: 250,
+  requires: [Furnace, DynamiteFactory],
+  improvedByElectricity: false,
+  requiresElectricity: true
+};
+
 /**
  * List of all productions
  */
@@ -819,5 +962,17 @@ export const Productions: Production[] = [
   SugarRefinery,
   TobaccoPlantation,
   Vineyard,
-  ZincMine
+  ZincMine,
+  OldSawmill,
+  ClayPit,
+  BrickFactory,
+  Sailmakers,
+  Steelworks,
+  WeaponFactory,
+  WindowMakers,
+  LimestoneQuarry,
+  ConcreteFactory,
+  SaltpetreWorks,
+  DynamiteFactory,
+  HeavyWeaponsFactory
 ];
