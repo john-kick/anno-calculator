@@ -263,9 +263,9 @@ function createInputField(id, labelText, value = 0) {
   const label = document.createElement("label");
   label.htmlFor = id;
   label.innerText = capitalizeFirstLetter(labelText);
-  label.classList.add("worker-label");
 
   const wrapper = document.createElement("div");
+  wrapper.classList.add("number-input");
   wrapper.append(label, input);
   return wrapper;
 }
